@@ -73,27 +73,72 @@ A imagem criará o banco `mecanica` com todas as tabelas e dados inseridos autom
 - **Funcionários_OS**: funcionários que trabalharam em uma OS.
 - **Pagamentos**: valor total, forma de pagamento, status e vínculo com OS.
 ![DER_mecanica.png](DER_mecanica.png)
----
 
-## ❓ 15 Questões para Análise e Prática de SQL
-
-1. **Listar todos os clientes que possuem veículos cadastrados.**
-2. **Exibir os veículos do cliente 'João da Silva'.**
-3. **Mostrar os serviços que custam mais de R$ 200,00.**
-4. **Listar os produtos com menos de 5 unidades em estoque.**
-5. **Obter as ordens de serviço em aberto.**
-6. **Listar os funcionários que participaram de ordens de serviço.**
-7. **Mostrar o total de ordens de serviço por cliente.**
-8. **Calcular o valor total de cada ordem de serviço com base em serviços e produtos.**
-9. **Exibir a soma dos pagamentos recebidos no mês atual.**
-10. **Listar as ordens de serviço com pagamento pendente.**
-11. **Mostrar a quantidade de serviços realizados por cada funcionário.**
-12. **Listar os produtos mais utilizados nas ordens de serviço.**
-13. **Exibir o valor médio dos serviços prestados.**
-14. **Listar os veículos e seus respectivos clientes.**
-15. **Obter a quantidade total de ordens de serviço por mês.**
 
 ---
+
+**Consultas avançadas com:**
+
+(Tabela derivada, GROUP BY, HAVING, WHERE, subselect)
+
+1. **Liste os clientes que possuem mais de 2 ordens de serviço abertas.**
+
+        (GROUP BY, HAVING, WHERE)
+
+2. **Liste os funcionários com a quantidade de ordens de serviço em que participaram, exibindo apenas os que participaram de mais de 3 ordens.**
+
+        (GROUP BY, HAVING)
+
+3. **Mostre os veículos que receberam mais de R$ 1000,00 em serviços, considerando o somatório de valor_cobrado.**
+
+        (Subselect, GROUP BY, HAVING)
+
+4. **Liste os produtos com estoque abaixo da média geral de todos os produtos.**
+
+        (Subselect no WHERE)
+
+5. **Crie uma consulta que use uma tabela derivada para calcular o total gasto por ordem de serviço (produtos + serviços) e filtre as que ultrapassam R$ 500.**
+
+        (Tabela derivada, WHERE)
+
+**Functions (criar 2)**
+
+(Sugestões de perguntas que exigiriam criação de functions)
+
+6. **Crie uma function que receba o id_os e retorne o total da ordem de serviço, somando serviços e produtos.**
+
+7. **Crie uma function que receba o id_funcionario e retorne a quantidade de ordens em que ele participou.**
+
+**Stored Procedures (criar 2)**
+
+(Sugestões que exigem lógica e podem ser reutilizadas)
+
+8. **Crie uma stored procedure que, dado um id_cliente, exiba todas as ordens de serviço dele com total gasto e status.**
+
+9. **Crie uma stored procedure para finalizar uma ordem de serviço, definindo a data_saida atual e alterando o status para 'Concluída'.**
+
+**Views (criar 2)**
+
+10. **Crie uma view que exiba o resumo das ordens de serviço: id, cliente, valor total (serviços + produtos), e status.**
+
+11. **Crie uma view com os produtos mais utilizados em ordens de serviço (com contagem e total em reais usados).**
+
+**Triggers (criar 2)**
+
+12. **Crie uma trigger que, ao inserir um item em Produtos_OS, desconte automaticamente o estoque do produto correspondente.**
+
+13. **Crie uma trigger que, ao inserir um pagamento com status 'Recebido', altere o status da ordem de serviço correspondente para 'Paga'.**
+
+**Extras (índices e performance)**
+
+14. **Compare o tempo de execução de uma consulta que busca ordens de serviço por cliente com e sem índice no campo id_cliente.**
+
+15. **Faça uma consulta que junte várias tabelas (cliente, veículo, OS, pagamento) e otimize-a utilizando índices adequados.**
+
+16. **Desenvolva uma consulta pesada (ex: ordens por mês, total gasto, cliente, status) e otimize seu desempenho.**
+
+    (Com e sem JOINs aninhados, usando EXPLAIN se possível)
+
 
 ## 🧑‍💻 Autor
 
