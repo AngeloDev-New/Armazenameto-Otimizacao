@@ -1,6 +1,6 @@
 import random
 from datetime import datetime, timedelta
-
+import os
 def get_data_aleatoria():
     inicio = datetime.strptime("2015-01-01", "%Y-%m-%d")
     dias = random.randint(0, 365 * 9)
@@ -239,6 +239,7 @@ CREATE TABLE Pagamentos (
     FOREIGN KEY (id_os) REFERENCES Ordens_de_Servico(id_os)
 ); 
 '''
+    os.system('mkdir -p db')
     salvar_query_em_arquivo(init, "./db/0_init.sql")
     salvar_query_em_arquivo(getClientesQuery(qtd_clientes), "./db/1_clientes.sql")
     salvar_query_em_arquivo(getFuncionariosQuery(qtd_funcionarios), "./db/2_funcionarios.sql")
