@@ -31,17 +31,22 @@ dominio_aleatorio = gerar_infinitamente(dominios)
 def salvar_query_em_arquivo(query, nome_arquivo):
     with open(nome_arquivo, 'a', encoding='utf-8') as f:
         f.write(query + "\n")
-
+id_Cliente = 0
+id_Funcionario = 0
+id_Servico = 0
 def getClientesQuery(qtd):
+    global id_Cliente
     query = "INSERT INTO Clientes (id, nome, telefone, email) VALUES\n"
     for i in range(1, qtd + 1):
         nome = next(nome_aleatorio)
         telefone = next(numero_aleatorio)
         email = nome.lower().replace(" ", ".") + f"@{next(dominio_aleatorio)}.com"
-        query += f"    ({i}, '{nome}', '{telefone}', '{email}'),\n"
+        query += f"    ({id_Cliente+i}, '{nome}', '{telefone}', '{email}'),\n"
+    id_Cliente+=qtd
     return query.rstrip(',\n') + ';\n'
 
 def getFuncionariosQuery(qtd):
+    global id_Funcionario
     query = "INSERT INTO Funcionarios (id, nome, telefone, email, cargo, salario, data_contratacao) VALUES\n"
     for i in range(1, qtd + 1):
         nome = next(nome_aleatorio)
@@ -50,27 +55,33 @@ def getFuncionariosQuery(qtd):
         cargo = random.choice(cargos)
         salario = round(random.uniform(1500, 5000), 2)
         data = get_data_aleatoria()
-        query += f"    ({i}, '{nome}', '{telefone}', '{email}', '{cargo}', {salario}, '{data}'),\n"
+        query += f"    ({id_Funcionario+i}, '{nome}', '{telefone}', '{email}', '{cargo}', {salario}, '{data}'),\n"
+    id_Funcionario+=qtd
     return query.rstrip(',\n') + ';\n'
 
 def getServicosQuery(qtd):
+    global id_Servico
     query = "INSERT INTO Servicos (id, descricao, preco_base) VALUES\n"
     for i in range(1, qtd + 1):
         descricao = random.choice(descricoes_servicos)
         preco = round(random.uniform(50, 500), 2)
-        query += f"    ({i}, '{descricao}', {preco}),\n"
+        query += f"    ({id_Servico+i}, '{descricao}', {preco}),\n"
+    id_Servico+=qtd
     return query.rstrip(',\n') + ';\n'
-
+id_Produto=0
 def getProdutosQuery(qtd):
+    global id_Produto
     query = "INSERT INTO Produtos (id, nome, preco, estoque) VALUES\n"
     for i in range(1, qtd + 1):
         nome = random.choice(produtos_list)
         preco = round(random.uniform(20, 300), 2)
         estoque = random.randint(1, 100)
-        query += f"    ({i}, '{nome}', {preco}, {estoque}),\n"
+        query += f"    ({id_Produto+i}, '{nome}', {preco}, {estoque}),\n"
+    id_Produto+=qtd
     return query.rstrip(',\n') + ';\n'
-
+id_veiculo=0
 def getVeiculosQuery(qtd, max_cliente_id):
+    global id_veiculo
     query = "INSERT INTO Veiculos (id, placa, modelo, marca, ano, cliente_id) VALUES\n"
     for i in range(1, qtd + 1):
         placa = ''.join(random.choices("ABCDEFGHIJKLMNOPQRSTUVWXYZ", k=3)) + '-' + ''.join(random.choices("0123456789", k=4))
@@ -78,10 +89,12 @@ def getVeiculosQuery(qtd, max_cliente_id):
         marca = random.choice(marcas)
         ano = random.randint(2000, 2023)
         cliente_id = random.randint(1, max_cliente_id)
-        query += f"    ({i}, '{placa}', '{modelo}', '{marca}', {ano}, {cliente_id}),\n"
+        query += f"    ({id_veiculo+i}, '{placa}', '{modelo}', '{marca}', {ano}, {cliente_id}),\n"
+    id_veiculo+=qtd
     return query.rstrip(',\n') + ';\n'
-
+id_OS = 0
 def getOSQuery(qtd, max_funcionario_id, max_veiculo_id):
+    global id_OS
     query = "INSERT INTO Ordens_de_Servico (id, data_abertura, data_fechamento, status, funcionario_id, veiculo_id) VALUES\n"
     for i in range(1, qtd + 1):
         abertura = get_data_aleatoria()
@@ -89,19 +102,21 @@ def getOSQuery(qtd, max_funcionario_id, max_veiculo_id):
         status = random.choice(status_list)
         funcionario_id = random.randint(1, max_funcionario_id)
         veiculo_id = random.randint(1, max_veiculo_id)
-        query += f"    ({i}, '{abertura}', '{fechamento}', '{status}', {funcionario_id}, {veiculo_id}),\n"
+        query += f"    ({id_OS+i}, '{abertura}', '{fechamento}', '{status}', {funcionario_id}, {veiculo_id}),\n"
+    id_OS+=qtd
     return query.rstrip(',\n') + ';\n'
 
 def getFOSQuery(qtd, max_funcionario_id, max_os_id):
-    query = "INSERT INTO Funcionarios_OS (funcionario_id, os_id) VALUES\n"
+    query = "INSERT IGNORE INTO Funcionarios_OS (funcionario_id, os_id) VALUES\n"
     for _ in range(qtd):
         funcionario_id = random.randint(1, max_funcionario_id)
         os_id = random.randint(1, max_os_id)
         query += f"    ({funcionario_id}, {os_id}),\n"
+    
     return query.rstrip(',\n') + ';\n'
 
 def getSOSQuery(qtd, max_servico_id, max_os_id):
-    query = "INSERT INTO Servicos_OS (servico_id, os_id, preco_final) VALUES\n"
+    query = "INSERT IGNORE INTO Servicos_OS (servico_id, os_id, preco_final) VALUES\n"
     for _ in range(qtd):
         servico_id = random.randint(1, max_servico_id)
         os_id = random.randint(1, max_os_id)
@@ -110,7 +125,7 @@ def getSOSQuery(qtd, max_servico_id, max_os_id):
     return query.rstrip(',\n') + ';\n'
 
 def getPOSQuery(qtd, max_produto_id, max_os_id):
-    query = "INSERT INTO Produtos_OS (produto_id, os_id, quantidade) VALUES\n"
+    query = "INSERT IGNORE INTO Produtos_OS (produto_id, os_id, quantidade) VALUES\n"
     for _ in range(qtd):
         produto_id = random.randint(1, max_produto_id)
         os_id = random.randint(1, max_os_id)
@@ -119,7 +134,7 @@ def getPOSQuery(qtd, max_produto_id, max_os_id):
     return query.rstrip(',\n') + ';\n'
 
 def getPagamentosQuery(qtd, max_os_id):
-    query = "INSERT INTO Pagamentos (os_id, valor_pago, forma_pagamento, data_pagamento) VALUES\n"
+    query = "INSERT IGNORE INTO Pagamentos (os_id, valor_pago, forma_pagamento, data_pagamento) VALUES\n"
     for _ in range(qtd):
         os_id = random.randint(1, max_os_id)
         valor = round(random.uniform(100, 1500), 2)
@@ -127,7 +142,9 @@ def getPagamentosQuery(qtd, max_os_id):
         data = get_data_aleatoria()
         query += f"    ({os_id}, {valor}, '{forma}', '{data}'),\n"
     return query.rstrip(',\n') + ';\n'
-
+def caststr(chars,i):
+    chars_int = len(str(i))
+    return ('0'*(chars-chars_int))+str(i)
 if __name__ == "__main__":
     qtd_clientes = 50000
     qtd_funcionarios = 1000
@@ -141,115 +158,139 @@ if __name__ == "__main__":
     qtd_pagamentos = 4000000
     init = '''
 DROP DATABASE IF EXISTS mecanica;
-CREATE DATABASE IF NOT EXISTS mecanica;
+CREATE DATABASE mecanica;
 USE mecanica;
+SET GLOBAL max_allowed_packet=134217728;
 
 CREATE TABLE Clientes (
-    id_cliente INT AUTO_INCREMENT PRIMARY KEY,
-   
- nome VARCHAR(100) NOT NULL,
-    telefone VARCHAR(30),
-    email VARCHAR(100),
-    endereco VARCHAR(255),
-    data_cadastro DATETIME DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE Veiculos (
-    id_veiculo INT AUTO_INCREMENT PRIMARY KEY,
-    id_cliente INT NOT NULL,
-    placa VARCHAR(10) NOT NULL,
-    marca VARCHAR(50),
-    modelo VARCHAR(50),
-    ano INT,
-    cor VARCHAR(30),
-    FOREIGN KEY (id_cliente) REFERENCES Clientes(id_cliente)
-);
-
-CREATE TABLE Servicos (
-    id_servico INT AUTO_INCREMENT PRIMARY KEY,
-    descricao VARCHAR(255) NOT NULL,
-    preco_base DECIMAL(10,2) NOT NULL,
-    tempo_estimado VARCHAR(20)
-);
-
-CREATE TABLE Produtos (
-    id_produto INT AUTO_INCREMENT PRIMARY KEY,
+    id INT PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
-    descricao VARCHAR(255),
-    preco_venda DECIMAL(10,2) NOT NULL,
-    quantidade_estoque INT DEFAULT 0
+    telefone VARCHAR(30),
+    email VARCHAR(100)
 );
 
 CREATE TABLE Funcionarios (
-    id_funcionario INT AUTO_INCREMENT PRIMARY KEY,
+    id INT PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
+    telefone VARCHAR(30),
+    email VARCHAR(100),
     cargo VARCHAR(50),
     salario DECIMAL(10,2),
-    data_admissao DATE
+    data_contratacao DATE
+);
+
+CREATE TABLE Servicos (
+    id INT PRIMARY KEY,
+    descricao VARCHAR(255) NOT NULL,
+    preco_base DECIMAL(10,2) NOT NULL
+);
+
+CREATE TABLE Produtos (
+    id INT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    preco DECIMAL(10,2) NOT NULL,
+    estoque INT NOT NULL
+);
+
+CREATE TABLE Veiculos (
+    id INT PRIMARY KEY,
+    placa VARCHAR(10) NOT NULL,
+    modelo VARCHAR(50),
+    marca VARCHAR(50),
+    ano INT,
+    cliente_id INT NOT NULL,
+    FOREIGN KEY (cliente_id) REFERENCES Clientes(id)
 );
 
 CREATE TABLE Ordens_de_Servico (
-    id_os INT AUTO_INCREMENT PRIMARY KEY,
-    id_cliente INT NOT NULL,
-    id_veiculo INT NOT NULL,
-    data_entrada DATETIME DEFAULT CURRENT_TIMESTAMP,
-    data_saida DATETIME,
-    status VARCHAR(30) DEFAULT 'Aberta',
-    observacoes TEXT,
-    FOREIGN KEY (id_cliente) REFERENCES Clientes(id_cliente),
-    FOREIGN KEY (id_veiculo) REFERENCES Veiculos(id_veiculo)
-);
-
-CREATE TABLE Servicos_OS (
-    id_os INT NOT NULL,
-    id_servico INT NOT NULL,
-    valor_cobrado DECIMAL(10,2),
-    quantidade INT DEFAULT 1,
-    PRIMARY KEY (id_os, id_servico),
-    FOREIGN KEY (id_os) REFERENCES Ordens_de_Servico(id_os),
-    FOREIGN KEY (id_servico) REFERENCES Servicos(id_servico)
-);
-
-CREATE TABLE Produtos_OS (
-    id_os INT NOT NULL,
-    id_produto INT NOT NULL,
-    quantidade INT DEFAULT 1,
-    valor_unitario DECIMAL(10,2),
-    PRIMARY KEY (id_os, id_produto),
-    FOREIGN KEY (id_os) REFERENCES Ordens_de_Servico(id_os),
-    FOREIGN KEY (id_produto) REFERENCES Produtos(id_produto)
+    id INT PRIMARY KEY,
+    data_abertura DATE,
+    data_fechamento DATE,
+    status VARCHAR(30),
+    funcionario_id INT,
+    veiculo_id INT,
+    FOREIGN KEY (funcionario_id) REFERENCES Funcionarios(id),
+    FOREIGN KEY (veiculo_id) REFERENCES Veiculos(id)
 );
 
 CREATE TABLE Funcionarios_OS (
-    id_os INT NOT NULL,
-    id_funcionario INT NOT NULL,
-    funcao_na_os VARCHAR(100),
-    PRIMARY KEY (id_os, id_funcionario),
-    FOREIGN KEY (id_os) REFERENCES Ordens_de_Servico(id_os),
-    FOREIGN KEY (id_funcionario) REFERENCES Funcionarios(id_funcionario)
+    funcionario_id INT,
+    os_id INT,
+    PRIMARY KEY (funcionario_id, os_id),
+    FOREIGN KEY (funcionario_id) REFERENCES Funcionarios(id),
+    FOREIGN KEY (os_id) REFERENCES Ordens_de_Servico(id)
+);
+
+CREATE TABLE Servicos_OS (
+    servico_id INT,
+    os_id INT,
+    preco_final DECIMAL(10,2),
+    PRIMARY KEY (servico_id, os_id),
+    FOREIGN KEY (servico_id) REFERENCES Servicos(id),
+    FOREIGN KEY (os_id) REFERENCES Ordens_de_Servico(id)
+);
+
+CREATE TABLE Produtos_OS (
+    produto_id INT,
+    os_id INT,
+    quantidade INT,
+    PRIMARY KEY (produto_id, os_id),
+    FOREIGN KEY (produto_id) REFERENCES Produtos(id),
+    FOREIGN KEY (os_id) REFERENCES Ordens_de_Servico(id)
 );
 
 CREATE TABLE Pagamentos (
-    id_pagamento INT AUTO_INCREMENT PRIMARY KEY,
-    id_os INT NOT NULL,
-    valor_total DECIMAL(10,2) NOT NULL,
-    forma_pagamento VARCHAR(50),
-    data_pagamento DATETIME DEFAULT CURRENT_TIMESTAMP,
-    status VARCHAR(30) DEFAULT 'Pendente',
-    FOREIGN KEY (id_os) REFERENCES Ordens_de_Servico(id_os)
-); 
+    os_id INT,
+    valor_pago DECIMAL(10,2),
+    forma_pagamento VARCHAR(20),
+    data_pagamento DATE,
+    PRIMARY KEY (os_id, data_pagamento),
+    FOREIGN KEY (os_id) REFERENCES Ordens_de_Servico(id)
+);
+
 '''
     os.system('mkdir -p db')
-    salvar_query_em_arquivo(init, "./db/0_init.sql")
-    salvar_query_em_arquivo(getClientesQuery(qtd_clientes), "./db/1_clientes.sql")
-    salvar_query_em_arquivo(getFuncionariosQuery(qtd_funcionarios), "./db/2_funcionarios.sql")
-    salvar_query_em_arquivo(getServicosQuery(qtd_servicos), "./db/3_servicos.sql")
-    salvar_query_em_arquivo(getProdutosQuery(qtd_produtos), "./db/4_produtos.sql")
-    salvar_query_em_arquivo(getVeiculosQuery(qtd_veiculos, qtd_clientes), "./db/5_veiculos.sql")
-    salvar_query_em_arquivo(getOSQuery(qtd_os, qtd_funcionarios, qtd_veiculos), "./db/6_ordens.sql")
-    salvar_query_em_arquivo(getFOSQuery(qtd_fos, qtd_funcionarios, qtd_os), "./db/7_funcionarios_os.sql")
-    salvar_query_em_arquivo(getSOSQuery(qtd_sos, qtd_servicos, qtd_os), "./db/8_servicos_os.sql")
-    salvar_query_em_arquivo(getPOSQuery(qtd_pos, qtd_produtos, qtd_os), "./db/9_produtos_os.sql")
-    salvar_query_em_arquivo(getPagamentosQuery(qtd_pagamentos, qtd_os), "./db/99_pagamentos.sql")
+    salvar_query_em_arquivo(init, "./db/000_init.sql")
+
+    for i,_ in enumerate(range(0, qtd_clientes, 5000)):
+        i = caststr(8,i)
+        salvar_query_em_arquivo(getClientesQuery(5000), f"./db/001_{i}_clientes.sql")
+
+    for i,_ in enumerate(range(0, qtd_funcionarios, 5000)):
+        i = caststr(8,i)
+        salvar_query_em_arquivo(getFuncionariosQuery(5000), f"./db/002_{i}_funcionarios.sql")
+
+    for i,_ in enumerate(range(0, qtd_servicos, 5000)):
+        i = caststr(8,i)
+        salvar_query_em_arquivo(getServicosQuery(5000), f"./db/003_{i}_servicos.sql")
+
+    for i,_ in enumerate(range(0, qtd_produtos, 5000)):
+        i = caststr(8,i)
+        salvar_query_em_arquivo(getProdutosQuery(5000), f"./db/004_{i}_produtos.sql")
+
+    for i,_ in enumerate(range(0, qtd_veiculos, 5000)):
+        i = caststr(8,i)
+        salvar_query_em_arquivo(getVeiculosQuery(5000, qtd_clientes), f"./db/005_{i}_veiculos.sql")
+
+    for i,_ in enumerate(range(0, qtd_os, 5000)):
+        i = caststr(8,i)
+        salvar_query_em_arquivo(getOSQuery(5000, qtd_funcionarios, qtd_veiculos), f"./db/006_{i}_ordens.sql")
+
+    for i,_ in enumerate(range(0, qtd_fos, 5000)):
+        i = caststr(8,i)
+        salvar_query_em_arquivo(getFOSQuery(5000, qtd_funcionarios, qtd_os), f"./db/007_{i}_funcionarios_os.sql")
+
+    for i,_ in enumerate(range(0, qtd_sos, 5000)):
+        i = caststr(8,i)
+        salvar_query_em_arquivo(getSOSQuery(5000, qtd_servicos, qtd_os), f"./db/008_{i}_servicos_os.sql")
+
+    for i,_ in enumerate(range(0, qtd_pos, 5000)):
+        i = caststr(8,i)
+        salvar_query_em_arquivo(getPOSQuery(5000, qtd_produtos, qtd_os), f"./db/009_{i}_produtos_os.sql")
+
+    for i,_ in enumerate(range(0, qtd_pagamentos, 5000)):
+        i = caststr(8,i)
+        salvar_query_em_arquivo(getPagamentosQuery(5000, qtd_os), f"./db/010_{i}_pagamentos.sql")
+
 
     print("Todos os arquivos foram gerados com IDs consistentes.")

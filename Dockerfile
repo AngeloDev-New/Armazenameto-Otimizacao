@@ -10,4 +10,5 @@ ENV MYSQL_DATABASE=mecanica
 EXPOSE 3306
 
 # Copia o script de inicialização (opcional, se existir)
+COPY myconfig.cnf /etc/mysql/conf.d/myconfig.cnf
 COPY db/*.sql /docker-entrypoint-initdb.d/

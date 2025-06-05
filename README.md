@@ -54,6 +54,9 @@ mecanica-db/
 ```bash
 docker build -t mecanica-db .
 docker run -d -p 3306:3306 --name mecanica_container mecanica-db
+docker exec -it mecanica_container bash
+mysql -u user -p
+
 ```
 
 A imagem criará o banco `mecanica` com todas as tabelas e dados inseridos automaticamente via `.sql` na pasta `/docker-entrypoint-initdb.d/`.
