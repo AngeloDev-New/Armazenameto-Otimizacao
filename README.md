@@ -18,7 +18,7 @@ Foi desenvolvido para fins educacionais com o objetivo de praticar modelagem, ma
 ### 1. Clonar o repositório
 
 ```bash
-git clone https://github.com/seu-usuario/mecanica-db.git
+git clone https://github.com:AngeloDev-New/Armazenameto-Otimizacao.git
 cd mecanica-db
 source initialize.sh
 ```

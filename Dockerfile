@@ -9,6 +9,6 @@ ENV MYSQL_DATABASE=mecanica
 # Expõe a porta interna padrão do MySQL
 EXPOSE 3306
 
-# Copia o script de inicialização (opcional, se existir)
+# Copia o script de inicialização 
 COPY myconfig.cnf /etc/mysql/conf.d/myconfig.cnf
 COPY db/*.sql /docker-entrypoint-initdb.d/
