@@ -20,6 +20,7 @@ Foi desenvolvido para fins educacionais com o objetivo de praticar modelagem, ma
 ```bash
 git clone https://github.com/seu-usuario/mecanica-db.git
 cd mecanica-db
+source initialize.sh
 ```
 
 ### 2. Estrutura esperada
@@ -36,17 +37,7 @@ mecanica-db/
     ├── 0_init.pdf
     └── Projeto-2-2025.pdf
 └── db/
-    ├── 0_init.sql
-    ├── 1_clientes.sql
-    ├── 2_funcionarios.sql
-    ├── 3_servicos.sql
-    ├── 4_produtos.sql
-    ├── 5_veiculos.sql
-    ├── 6_ordens.sql
-    ├── 7_funcionarios_os.sql
-    ├── 8_servicos_os.sql
-    ├── 9_produtos_os.sql
-    └── 99_pagamentos.sql
+    └── arquivos gerados por 'script.py'
 ```
 
 ### 3. Construir e rodar
